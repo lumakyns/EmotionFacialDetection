@@ -83,3 +83,6 @@ class CNN(nn.Module):
                 all_predictions.extend(predictions.cpu().numpy())
         
         return all_predictions
+
+## DATA PROCESSING
+
