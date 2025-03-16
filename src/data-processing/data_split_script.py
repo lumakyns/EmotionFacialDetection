@@ -2,18 +2,20 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+EXCLUDE_CLASSES = ["contempt"]
+
 def process_and_split_data(csv_path, deposit_path):
     # Step 1: Load CSV into NumPy array
     data = np.loadtxt(csv_path, delimiter=',', dtype=str)
 
-    # Step 2: Remove the first column
-    data = data[:, 1:]
+    # Step 2: Remove the first column, and header
+    data = data[1:, 1:]
 
     # Step 3: Convert last row to lowercase
     data[:, -1] = np.char.lower(data[:, -1])
 
     # Step 4: Remove rows where the last column is "contempt" or "fear"
-    mask = ~np.isin(data[:, -1], ["contempt", "fear"])
+    mask = ~np.isin(data[:, -1], EXCLUDE_CLASSES)
     data = data[mask]
 
     # Step 5: Train-test split
