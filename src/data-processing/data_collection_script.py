@@ -8,19 +8,20 @@ def read_images_from_csv(files):
         with open(csv_file, 'r') as file:
             reader = csv.reader(file)
             for row in reader:
-                #get image path and label
+                # Get image path and label
                 _, image_name, label = row
-                #standardize titles in case of capitlization
+                # Standardize titles in case of capitlization
                 label = label.lower()
                 if label not in images_by_label and label != 'emotion':
-                    #merge sad into sadness label
+                    # Merge sad into sadness label
                     if label == 'sad':
                         images_by_label['sadness'] = []
                     elif label == 'contempt':
                         continue
                     else:
                         images_by_label[label] = []
-                #exclude header line
+                        
+                # Exclude header line
                 if label != 'emotion':
                     #merge cont.
                     if label == 'sad':

@@ -4,12 +4,15 @@ from sklearn.model_selection import train_test_split
 
 EXCLUDE_CLASSES = ["contempt"]
 
-def process_and_split_data(csv_path, deposit_path):
+def process_and_split_data(csv_path1, csv_path2, deposit_path):
     # Step 1: Load CSV into NumPy array
-    data = np.loadtxt(csv_path, delimiter=',', dtype=str)
+    data1 = np.loadtxt(csv_path1, delimiter=',', dtype=str)
+    data2 = np.loadtxt(csv_path2, delimiter=',', dtype=str)
 
     # Step 2: Remove the first column, and header
-    data = data[1:, 1:]
+    data1 = data1[1:, 1:]
+    data2 = data2[1:, 1:]
+    data = np.concatenate((data1, data2), axis=0)
 
     # Step 3: Convert last row to lowercase
     data[:, -1] = np.char.lower(data[:, -1])
@@ -33,6 +36,7 @@ def process_and_split_data(csv_path, deposit_path):
     np.savetxt(f"{deposit_path}/test.csv", test_data, delimiter=',', fmt='%s')
 
 
-csv_path = "C:/Users/1frew/Desktop/Code/Classes/178Project/rsrc/facial_expressions/data/legend.csv"
+csv_path1 = "C:/Users/1frew/Desktop/Code/Classes/178Project/rsrc/facial_expressions/data/legend.csv"
+csv_path2 = "C:/Users/1frew/Desktop/Code/Classes/178Project/rsrc/facial_expressions/data/500_picts_satz.csv"
 deposit_path = "C:/Users/1frew/Desktop/Code/Classes/178Project/src/luca-split/split-csv"
-process_and_split_data(csv_path, deposit_path)
+process_and_split_data(csv_path1, csv_path2, deposit_path)

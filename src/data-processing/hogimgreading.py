@@ -8,6 +8,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 from sklearn.metrics import accuracy_score
 from collections import defaultdict
+
 def load_hog_features(image_dict, directory):
     X = []
     y = []
@@ -21,12 +22,15 @@ def load_hog_features(image_dict, directory):
             if img is None:
                 continue  # Skip if image not found
             gsimg = img
+            
             #convert to int np array
             if gsimg.dtype == np.uint8:
                 gsimg = gsimg.astype(float) / 255
+                
             #assert dimensions else skip
             if gsimg.shape[0] != 350 or gsimg.shape[1] != 350:
                 continue
+            
             #grayscale
             if(len(img.shape) == 3):
                 gsimg = np.mean(img, axis=2)
