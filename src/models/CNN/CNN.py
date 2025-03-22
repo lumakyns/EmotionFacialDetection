@@ -1,5 +1,3 @@
-## INCLUDES
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,17 +9,25 @@ from torchvision import datasets
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 
+from math import prod
+from itertools import product
 from PIL import Image
-
 import os
 import pandas as pd
 import numpy as np
-from itertools import product
 import csv
+
+"""
+---------------------------------------------------
+Author: Lumakyns
+Date: 2025-03-20
+Description: Convolutional Neural Network for detecting emotions in images.
+Version: 1.0
+---------------------------------------------------
+"""
 
 
 ## CNN CLASS
-
 class CNN(nn.Module):
     def __init__(self, parameters, epochs=10):
         super(CNN, self).__init__()
@@ -125,10 +131,10 @@ label_map = {
 }
 
 # Paths
-train_csv_path = os.path.join(os.path.dirname(__file__), "../luca-split/split-csv/train.csv")
-test_csv_path = os.path.join(os.path.dirname(__file__), "../luca-split/split-csv/test.csv")
-img_dir = os.path.join(os.path.dirname(__file__), "../../rsrc/facial_expressions/images")
-output_dir = os.path.join(os.path.dirname(__file__), "../results/")
+train_csv_path = os.path.join(os.path.dirname(__file__), "../../split/split-csv/train.csv")
+test_csv_path = os.path.join(os.path.dirname(__file__), "../../split/split-csv/test.csv")
+img_dir = os.path.join(os.path.dirname(__file__), "../../../rsrc/facial_expressions/images")
+output_dir = os.path.join(os.path.dirname(__file__), "../../results/")
 
 # Load CSV's
 train_df = pd.read_csv(train_csv_path)
@@ -166,10 +172,8 @@ class Extract(Dataset):
 train_dataset = Extract(train_df, img_dir)
 test_dataset = Extract(test_df, img_dir)
 
-
-## RUN MODELS using Grid Search
-
-# Constants
+# Grid Search
+# NOTE: Feel free to change these values as you please, A CSV will automatically be deposited in ../results
 param_grid = {
     'learning_rate': [0.001, 0.0001],
     'batch_size': [32, 64],
@@ -180,13 +184,13 @@ param_grid = {
 
 keys = param_grid.keys()
 vals = param_grid.values()
+num_combinations = prod(len(v) for v in vals)
 
-# Go through all combinations of constants
+# Go through all parameter combinations
 for i, combination in enumerate(product(*vals)):
     params = dict(zip(keys, combination))
     
-    print(f"Running configuration {i+1}:")
-    print(params)
+    print(f"Running configuration {i+1}/{num_combinations}: {params}\r", end="")
     
     # PyTorch Dataloaders
     train_loader = DataLoader(train_dataset, batch_size=params['batch_size'], shuffle=False)
